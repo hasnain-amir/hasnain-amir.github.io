@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,15 +12,17 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; background: #000; overflow-x: hidden; }
 body {
   background: #000;
   color: #fff;
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
   overflow-x: hidden;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
-html { background: #000; overflow-x: hidden; }
+body.loaded { opacity: 1; }
 
 /* Top bar */
 #topbar {
@@ -84,14 +85,12 @@ html { background: #000; overflow-x: hidden; }
 }
 
 .hero-heading {
-  font-family: 'Poppins', sans-serif;
   font-size: clamp(34px, 4.2vw, 56px);
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  color: rgba(255,255,255,0.7);
-  max-width: 700px;
-  margin-bottom: 0;
+  color: rgba(255,255,255,0.75);
+  max-width: 860px;
 }
 .hero-heading em {
   font-style: italic;
@@ -106,9 +105,15 @@ html { background: #000; overflow-x: hidden; }
   color: #fff;
   letter-spacing: -0.04em;
   line-height: 1;
-  margin-bottom: 40px;
-  min-width: 0;
+  margin-bottom: 36px;
   text-align: center;
+}
+.hero-sub {
+  max-width: 760px;
+  font-size: 15px;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.5);
+  font-weight: 300;
 }
 
 .social-row {
@@ -116,7 +121,7 @@ html { background: #000; overflow-x: hidden; }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 24px;
+  margin-top: 28px;
 }
 .social-btn {
   width: 44px; height: 44px;
@@ -128,14 +133,15 @@ html { background: #000; overflow-x: hidden; }
   justify-content: center;
   color: rgba(255,255,255,0.6);
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
 }
 .social-btn svg { width: 18px; height: 18px; fill: currentColor; }
-.social-btn.x:hover  { background: #000; border-color: #fff; color: #fff; transform: translateY(-4px); box-shadow: 0 8px 16px rgba(255,255,255,0.1); }
-.social-btn.li:hover { background: #0077b5; border-color: #0077b5; color: #fff; transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,119,181,0.4); }
-.social-btn.gh:hover { background: #24292e; border-color: #555; color: #fff; transform: translateY(-4px); box-shadow: 0 8px 16px rgba(255,255,255,0.07); }
-.social-btn.email:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.35); color: #fff; transform: translateY(-4px); box-shadow: 0 8px 16px rgba(255,255,255,0.12); }
+.social-btn.x:hover  { background:#000; border-color:#fff; color:#fff; transform:translateY(-4px) scale(1.08); box-shadow:0 8px 20px rgba(255,255,255,0.1); }
+.social-btn.li:hover { background:#0077b5; border-color:#0077b5; color:#fff; transform:translateY(-4px) scale(1.08); box-shadow:0 8px 20px rgba(0,119,181,0.35); }
+.social-btn.gh:hover { background:#24292e; border-color:#555; color:#fff; transform:translateY(-4px) scale(1.08); box-shadow:0 8px 20px rgba(255,255,255,0.07); }
+.social-btn.email:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.35); color: #fff; transform: translateY(-4px) scale(1.08); box-shadow: 0 8px 16px rgba(255,255,255,0.12); }
 .social-btn.email { display: none; }
+
 .email-wrap {
   display: inline-flex;
   position: relative;
@@ -155,6 +161,45 @@ html { background: #000; overflow-x: hidden; }
 .email-copied.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+.hero-cta-row {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  transition: all 0.25s ease;
+}
+.hero-cta.primary {
+  background: #fff;
+  color: #000;
+  border: 1px solid #fff;
+}
+.hero-cta.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(255,255,255,0.16);
+}
+.hero-cta.secondary {
+  color: rgba(255,255,255,0.72);
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.04);
+}
+.hero-cta.secondary:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,0.28);
+  transform: translateY(-2px);
 }
 
 .scroll-indicator {
@@ -194,6 +239,27 @@ html { background: #000; overflow-x: hidden; }
   0%, 100% { opacity: 0.3; transform: translate(-50%, 0); }
   50% { opacity: 1; transform: translate(-50%, 4px); }
 }
+
+/* Section shared */
+.section-intro {
+  max-width: 1100px;
+  margin: 0 auto 48px;
+  padding: 0 60px;
+}
+.section-title {
+  font-size: 35px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.92);
+}
+.section-note {
+  margin-top: 10px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.42);
+  max-width: 620px;
+  line-height: 1.8;
+}
+
 /* Work section */
 #work {
   padding: 120px 0;
@@ -221,13 +287,17 @@ html { background: #000; overflow-x: hidden; }
   background: #000;
   position: sticky;
   margin-bottom: 16px;
-  transition: border-color 0.2s;
+  transition: border-color 0.3s ease, transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s ease;
   text-decoration: none;
 }
-.work-item:nth-child(1) { top: 80px; z-index: 1; }
-.work-item:nth-child(2) { top: 86px; z-index: 2; }
-.work-item:nth-child(3) { top: 92px; z-index: 3; }
-.work-item:hover { border-color: rgba(255,255,255,0.07); }
+.work-item:nth-child(2) { top: 80px; z-index: 1; }
+.work-item:nth-child(3) { top: 86px; z-index: 2; }
+.work-item:nth-child(4) { top: 92px; z-index: 3; }
+.work-item:nth-child(5) { top: 98px; z-index: 4; }
+.work-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 32px 64px rgba(0,0,0,0.6);
+}
 .work-name {
   font-size: 22px;
   font-weight: 600;
@@ -237,11 +307,11 @@ html { background: #000; overflow-x: hidden; }
 }
 .work-desc {
   font-size: 13px;
-  color: rgba(255,255,255,0.4);
-  line-height: 1.7;
+  color: rgba(255,255,255,0.42);
+  line-height: 1.75;
   font-weight: 300;
   margin-bottom: 16px;
-  max-width: 340px;
+  max-width: 380px;
 }
 .work-tags {
   display: flex;
@@ -254,15 +324,20 @@ html { background: #000; overflow-x: hidden; }
   padding: 3px 10px;
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 999px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.46);
   letter-spacing: 0.02em;
+}
+.work-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 .work-link {
   font-size: 12px;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.55);
   text-decoration: none;
   letter-spacing: 0.02em;
-  transition: color 0.2s;
+  transition: color 0.2s ease, letter-spacing 0.35s ease;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -271,20 +346,22 @@ html { background: #000; overflow-x: hidden; }
   width: 14px;
   height: 14px;
 }
-.work-link:hover { color: #fff; }
+.work-link:hover {
+  color: #fff;
+  letter-spacing: 0.04em;
+}
 .work-img {
   width: 100%;
   aspect-ratio: 16/10;
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.2);
-  letter-spacing: 0.04em;
   overflow: hidden;
+  background: #0e0e0e;
+  transition: transform 0.55s cubic-bezier(0.16,1,0.3,1), box-shadow 0.55s ease;
+}
+.work-item:hover .work-img {
+  transform: translateY(-5px) scale(1.015);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.5);
 }
 .work-img img {
   width: 100%;
@@ -323,10 +400,30 @@ html { background: #000; overflow-x: hidden; }
 .about-body p {
   font-size: 15px;
   font-weight: 300;
-  color: rgba(255,255,255,0.5);
-  line-height: 1.85;
+  color: rgba(255,255,255,0.53);
+  line-height: 1.9;
 }
-.about-body p strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+.about-body p strong { color: rgba(255,255,255,0.92); font-weight: 500; }
+.about-points {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.about-point {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.02);
+}
+.about-point strong {
+  display: block;
+  color: rgba(255,255,255,0.92);
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
 .cv-btn {
   display: inline-flex;
   align-items: center;
@@ -341,11 +438,12 @@ html { background: #000; overflow-x: hidden; }
   text-decoration: none;
   transition: all 0.2s;
   width: fit-content;
+  animation: subtlePulse 4s ease-in-out infinite;
 }
 .cv-btn:hover {
   border-color: rgba(255,255,255,0.35);
   color: #fff;
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.03);
 }
 
 /* Stack */
@@ -388,9 +486,8 @@ html { background: #000; overflow-x: hidden; }
 }
 .marquee-wrap:nth-child(2) .marquee { animation-direction: reverse; animation-duration: 36s; }
 .spill svg,
-.spill img { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.65; }
-.spill svg { fill: #9aa0a6 !important; }
-.spill img { filter: grayscale(1) brightness(1.25); }
+.spill img { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.75; }
+.spill img { filter: grayscale(1) brightness(1.2); }
 @keyframes mq { to { transform: translateX(-50%); } }
 .spill {
   display: inline-flex;
@@ -400,99 +497,19 @@ html { background: #000; overflow-x: hidden; }
   padding: 6px 14px;
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 999px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.45);
   font-weight: 300;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition: border-color 0.25s ease, color 0.25s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
 }
-.spill:hover { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.75); }
-.sdot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.3); flex-shrink: 0; }
+.spill:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.8);
+}
+.spill:hover img { filter: none; opacity: 1; }
 
-/* Bottom nav */
-#bottom-nav {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: bottom 0.3s ease, transform 0.3s ease, border-radius 0.3s ease, border 0.3s ease;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 999px;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  white-space: nowrap;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-}
-.bnav-link {
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 400;
-  color: rgba(255,255,255,0.5);
-  text-decoration: none;
-  transition: all 0.2s;
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-family: 'Poppins', sans-serif;
-}
-.bnav-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
-.bnav-email {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 400;
-  color: rgba(255,255,255,0.8);
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.2s;
-  position: relative;
-  white-space: nowrap;
-}
-.bnav-email:hover { background: rgba(255,255,255,0.14); color: #fff; }
-.bnav-copied {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 400;
-  color: rgba(255,255,255,0.8);
-  white-space: nowrap;
-}
-.bnav-copied.show { opacity: 1; }
-#contact {
-  padding: 160px 24px;
-  border-top: 1px solid rgba(255,255,255,0.07);
-  text-align: center;
-}
-.contact-heading {
-  font-size: clamp(36px, 6vw, 72px);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: #fff;
-  margin-bottom: 32px;
-  line-height: 1.1;
-}
-footer {
-  padding: 24px 40px;
-  border-top: 1px solid rgba(255,255,255,0.07);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  color: rgba(255,255,255,0.25);
-  letter-spacing: 0.02em;
-}
+/* Writing */
 #writing {
   padding: 80px 0 120px;
   border-top: 1px solid rgba(255,255,255,0.07);
@@ -523,19 +540,17 @@ footer {
   text-decoration: none;
   color: inherit;
   background: #000;
-  transition: border-color 0.2s, transform 0.2s;
+  transition: border-color 0.3s ease, transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease;
 }
-.writing-item:hover { border-color: rgba(255,255,255,0.16); transform: translateY(-3px); }
+.writing-item:hover {
+  border-color: rgba(255,255,255,0.16);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
 .writing-img {
   width: 100%;
   aspect-ratio: 16/9;
   background: #111;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: rgba(255,255,255,0.15);
-  letter-spacing: 0.08em;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .writing-img img {
@@ -544,7 +559,13 @@ footer {
   object-fit: cover;
   display: block;
 }
-.writing-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.writing-body {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 .writing-tag {
   font-size: 10px;
   letter-spacing: 0.14em;
@@ -558,7 +579,6 @@ footer {
   color: #fff;
   letter-spacing: -0.01em;
   line-height: 1.35;
-  transition: color 0.2s;
 }
 .writing-desc {
   font-size: 12px;
@@ -577,14 +597,159 @@ footer {
   color: rgba(255,255,255,0.25);
 }
 .writing-footer-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.2); }
-.writing-meta {
-  font-size: 11px;
-  color: rgba(255,255,255,0.25);
-  white-space: nowrap;
-  letter-spacing: 0.04em;
+
+/* Contact */
+#contact {
+  padding: 160px 24px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  text-align: center;
+}
+.contact-heading {
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-bottom: 14px;
+  line-height: 1.1;
+}
+.contact-sub {
+  max-width: 620px;
+  margin: 0 auto;
+  font-size: 14px;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.45);
 }
 
-/* ── Responsive ── */
+/* Footer */
+footer {
+  padding: 24px 40px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.02em;
+}
+
+/* Bottom nav */
+#bottom-nav {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: bottom 0.5s cubic-bezier(0.16,1,0.3,1);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.bnav-link {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: 'Poppins', sans-serif;
+}
+.bnav-link:hover { color: #fff; background: rgba(255,255,255,0.07); }
+.bnav-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  white-space: nowrap;
+}
+.bnav-email:hover {
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  transform: scale(1.04);
+}
+.bnav-email:active { transform: scale(0.96); }
+.bnav-copied {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  white-space: nowrap;
+}
+
+/* Cursor */
+* { cursor: none !important; }
+#cursor {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s cubic-bezier(0.16,1,0.3,1), height 0.25s cubic-bezier(0.16,1,0.3,1), background 0.2s ease, opacity 0.2s ease;
+  mix-blend-mode: difference;
+  will-change: left, top;
+}
+#cursor.expand { width: 36px; height: 36px; background: rgba(255,255,255,0.12); }
+#cursor.hidden { opacity: 0; }
+
+/* Reveal */
+.reveal { opacity:0; transform:translateY(42px); transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity:1; transform:none; }
+.reveal-left { opacity:0; transform:translateX(-42px); transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1); }
+.reveal-left.visible { opacity:1; transform:none; }
+.reveal-right { opacity:0; transform:translateX(42px); transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1); }
+.reveal-right.visible { opacity:1; transform:none; }
+.stagger > * { opacity:0; transform:translateY(28px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
+.stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0s; }
+.stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:0.2s; }
+.stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:0.4s; }
+.stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:0.6s; }
+
+/* Hero entrance */
+@keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+@keyframes subtlePulse { 0%,100%{ box-shadow:0 0 0 0 rgba(255,255,255,0.07); } 50%{ box-shadow:0 0 0 6px rgba(255,255,255,0.02); } }
+
+#topbar      { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0s both; }
+.hero-label  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.15s both; }
+.hero-heading{ animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.28s both; }
+.hero-sub    { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.4s both; }
+.hero-cta-row{ animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s both; }
+.social-row  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.58s both; }
+
+/* Scrollbar */
+::selection { background: rgba(218,112,214,0.8); color: #fff; }
+::-moz-selection { background: rgba(218,112,214,0.8); color: #fff; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: rgba(218,112,214,0.4); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(218,112,214,0.7); }
+* { scrollbar-width: thin; scrollbar-color: rgba(218,112,214,0.4) #000; }
+
+/* Responsive */
 @media (max-width: 1024px) {
   #topbar { padding: 16px 20px; }
   .topbar-inner { width: calc(100% - 40px); }
@@ -593,7 +758,8 @@ footer {
   .about-inner,
   .stack-top,
   .marquee-outer,
-  .writing-inner { padding: 0 32px; }
+  .writing-inner,
+  .section-intro { padding: 0 32px; }
   .work-item { gap: 40px; }
 }
 
@@ -610,8 +776,8 @@ footer {
     gap: 32px;
   }
   .about-label { position: static; }
+  .about-points { grid-template-columns: 1fr; }
   .writing-list { grid-template-columns: 1fr 1fr; }
-  #bottom-nav { gap: 2px; }
 }
 
 @media (max-width: 640px) {
@@ -619,6 +785,7 @@ footer {
   .hero-label { font-size: 14px; }
   .hero-heading { font-size: clamp(28px, 6vw, 40px); }
   .cycle-word { font-size: clamp(52px, 16vw, 96px); }
+  .hero-sub { font-size: 14px; }
   .social-row { gap: 8px; flex-wrap: wrap; }
   .email-copied {
     display: inline-flex;
@@ -631,11 +798,13 @@ footer {
   .about-inner,
   .stack-top,
   .marquee-outer,
-  .writing-inner { padding: 0 20px; }
+  .writing-inner,
+  .section-intro { padding: 0 20px; }
   .work-title,
   .about-label,
   .stack-label,
-  .writing-label { font-size: 28px; }
+  .writing-label,
+  .section-title { font-size: 28px; }
   .work-item { padding: 22px; }
   .writing-list { grid-template-columns: 1fr; }
   #bottom-nav {
@@ -659,108 +828,12 @@ footer {
   #bottom-nav { display: none; }
   .social-btn.email { display: inline-flex; }
 }
-::selection { background: rgba(218,112,214,0.8); color: #fff; }
-::-moz-selection { background: rgba(218,112,214,0.8); color: #fff; }
-
-/* ── Custom scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #000; }
-::-webkit-scrollbar-thumb { background: rgba(218,112,214,0.4); border-radius: 999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(218,112,214,0.7); }
-* { scrollbar-width: thin; scrollbar-color: rgba(218,112,214,0.4) #000; }
-* { cursor: none !important; }
-#cursor {
-  position: fixed;
-  width: 8px; height: 8px;
-  background: #fff;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  transform: translate(-50%, -50%);
-  transition: width 0.25s cubic-bezier(0.16,1,0.3,1), height 0.25s cubic-bezier(0.16,1,0.3,1), background 0.2s ease, opacity 0.2s ease;
-  mix-blend-mode: difference;
-  will-change: left, top;
-}
-#cursor.expand { width: 36px; height: 36px; background: rgba(255,255,255,0.12); }
-#cursor.hidden { opacity: 0; }
-
-/* ── Page load ── */
-body { opacity: 0; transition: opacity 0.5s ease; }
-body.loaded { opacity: 1; }
-
-/* ── Scroll reveals ── */
-.reveal { opacity:0; transform:translateY(42px); transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1); }
-.reveal.visible { opacity:1; transform:none; }
-.reveal-left { opacity:0; transform:translateX(-42px); transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1); }
-.reveal-left.visible { opacity:1; transform:none; }
-.reveal-right { opacity:0; transform:translateX(42px); transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1); }
-.reveal-right.visible { opacity:1; transform:none; }
-.stagger > * { opacity:0; transform:translateY(28px); transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1); }
-.stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0s; }
-.stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:0.2s; }
-.stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:0.4s; }
-.stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:0.6s; }
-
-/* ── Hero entrance ── */
-@keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
-#topbar      { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0s both; }
-.hero-label  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.15s both; }
-.hero-heading{ animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.28s both; }
-.hero-intro  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.38s both; }
-.hero-role   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.44s both; }
-.social-row  { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.54s both; }
-
-/* ── Social buttons ── */
-.social-btn { transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease; }
-.social-btn.x:hover  { background:#000; border-color:#fff; color:#fff; transform:translateY(-4px) scale(1.08); box-shadow:0 8px 20px rgba(255,255,255,0.1); }
-.social-btn.li:hover { background:#0077b5; border-color:#0077b5; color:#fff; transform:translateY(-4px) scale(1.08); box-shadow:0 8px 20px rgba(0,119,181,0.35); }
-.social-btn.gh:hover { background:#24292e; border-color:#555; color:#fff; transform:translateY(-4px) scale(1.08); box-shadow:0 8px 20px rgba(255,255,255,0.07); }
-
-/* ── Stack pills ── */
-.spill { transition: border-color 0.25s ease, color 0.25s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1); }
-.spill:hover { transform: translateY(-2px); border-color:rgba(255,255,255,0.25); color:rgba(255,255,255,0.8); }
-.spill:hover svg { fill: var(--icon-color, #fff) !important; opacity: 1; }
-.spill:hover img { filter: none; opacity: 1; }
-.spill svg { transition: fill 0.25s ease, opacity 0.25s ease; }
-.spill:hover svg { opacity:1; }
-.spill:nth-child(1):hover svg { fill:#61DAFB; }
-.spill:nth-child(2):hover svg { fill:#3178C6; }
-.spill:nth-child(3):hover svg { fill:#F7DF1E; }
-.spill:nth-child(4):hover svg { fill:#E34F26; }
-.spill:nth-child(5):hover svg { fill:#1572B6; }
-.spill:nth-child(6):hover svg { fill:#339933; }
-.spill:nth-child(7):hover svg { fill:#F24E1E; }
-.spill:nth-child(8):hover svg { fill:#F05032; }
-
-/* ── Work cards ── */
-.work-item { transition: border-color 0.3s ease, transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s ease; }
-.work-item:hover { transform: translateY(-2px); box-shadow: 0 32px 64px rgba(0,0,0,0.6); }
-.work-img { transition: transform 0.55s cubic-bezier(0.16,1,0.3,1), box-shadow 0.55s ease; }
-.work-item:hover .work-img { transform: translateY(-5px) scale(1.015); box-shadow: 0 24px 48px rgba(0,0,0,0.5); }
-.work-link { transition: color 0.2s ease, letter-spacing 0.35s ease; }
-.work-link:hover { color:#fff; letter-spacing:0.04em; }
-
-/* ── Writing cards ── */
-.writing-item { transition: border-color 0.3s ease, transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease; }
-.writing-item:hover { border-color:rgba(255,255,255,0.16); transform:translateY(-4px); box-shadow:0 20px 40px rgba(0,0,0,0.4); }
-
-/* ── Bottom nav ── */
-#bottom-nav { transition: bottom 0.5s cubic-bezier(0.16,1,0.3,1); }
-.bnav-link { transition: color 0.2s ease, background 0.2s ease; }
-.bnav-email { transition: background 0.2s ease, color 0.2s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-.bnav-email:hover { transform: scale(1.04); }
-.bnav-email:active { transform: scale(0.96); }
-
-/* ── CV button ── */
-@keyframes subtlePulse { 0%,100%{ box-shadow:0 0 0 0 rgba(255,255,255,0.07); } 50%{ box-shadow:0 0 0 6px rgba(255,255,255,0.02); } }
-.cv-btn { animation: subtlePulse 4s ease-in-out infinite; transition: border-color 0.2s, color 0.2s, transform 0.35s cubic-bezier(0.34,1.56,0.64,1); }
-.cv-btn:hover { transform: translateY(-2px) scale(1.03); }
-
 </style>
 </head>
 <body>
 
 <div id="cursor"></div>
+
 <header id="topbar">
   <div class="topbar-inner">
     <span class="tb-time" id="clock"></span>
@@ -769,8 +842,20 @@ body.loaded { opacity: 1; }
 </header>
 
 <section id="hero">
-  <p class="hero-label">Hasnain Amir &nbsp;·&nbsp; Designer &amp; Developer</p>
-  <h1 class="hero-heading">I design and build digital<br><span class="cycle-word" id="cycle">apps</span></h1>
+  <p class="hero-label">Hasnain Amir &nbsp;·&nbsp; Full-Stack Developer</p>
+  <h1 class="hero-heading">
+    I design and build digital<br>
+    <span class="cycle-word" id="cycle">apps</span>
+  </h1>
+  <p class="hero-sub">
+    Computer Science student building full-stack applications, backend systems, databases, and embedded projects with a focus on clarity, structure, and real implementation.
+  </p>
+
+  <div class="hero-cta-row">
+    <a class="hero-cta primary" href="#work">View Projects</a>
+    <a class="hero-cta secondary" href="https://github.com/hasnain-amir" target="_blank" rel="noopener">GitHub</a>
+  </div>
+
   <div class="social-row">
     <div class="email-wrap">
       <button class="social-btn email" aria-label="Copy email" type="button" onclick="copyEmailOnly(event)">
@@ -781,90 +866,164 @@ body.loaded { opacity: 1; }
       </button>
       <span class="email-copied" aria-live="polite">Copied</span>
     </div>
-    <a href="https://x.com/hasnainamirr" class="social-btn x" aria-label="X" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-    </a>
+
     <a href="https://www.linkedin.com/in/hasnain-amir/" class="social-btn li" aria-label="LinkedIn" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
     </a>
+
     <a href="https://github.com/hasnain-amir" class="social-btn gh" aria-label="GitHub" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
     </a>
   </div>
+
   <a class="scroll-indicator" href="#work" aria-label="Scroll to work">
     <span class="scroll-dot" aria-hidden="true"></span>
     <span>Scroll</span>
   </a>
 </section>
 
-<!-- WORK -->
 <section id="work">
   <div class="work-inner">
     <h2 class="work-title reveal">Selected Work</h2>
 
-    <a class="work-item work-card-link reveal" href="https://noori.app" target="_blank" rel="noopener">
+    <div class="work-item reveal">
+      <div class="work-info">
+        <h3 class="work-name">CV Management System</h3>
+        <p class="work-desc">
+          A full-stack web application with authentication, live search, and a MySQL-backed data model, split into separate frontend and backend repositories for cleaner architecture and deployment.
+        </p>
+        <div class="work-tags">
+          <span class="wtag">Node.js</span>
+          <span class="wtag">Express</span>
+          <span class="wtag">MySQL</span>
+          <span class="wtag">Full Stack</span>
+        </div>
+        <div class="work-actions">
+          <a class="work-link" href="https://github.com/hasnain-amir/cv-management-frontend" target="_blank" rel="noopener">
+            Frontend Repo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </a>
+          <a class="work-link" href="https://github.com/hasnain-amir/cv-management-backend" target="_blank" rel="noopener">
+            Backend Repo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </a>
+        </div>
+      </div>
+      <div class="work-img work-img-cv">
+        <img src="assets/cv-management-preview.png" alt="CV Management System preview" />
+      </div>
+    </div>
+
+    <div class="work-item reveal">
+      <div class="work-info">
+        <h3 class="work-name">Project Management Database</h3>
+        <p class="work-desc">
+          A fully normalised MySQL database modelling clients, projects, staff, and skill-based assignment using structured relational design, junction tables, and query-driven reporting.
+        </p>
+        <div class="work-tags">
+          <span class="wtag">MySQL</span>
+          <span class="wtag">3NF</span>
+          <span class="wtag">SQL</span>
+          <span class="wtag">Data Modelling</span>
+        </div>
+        <div class="work-actions">
+          <a class="work-link" href="https://github.com/hasnain-amir/project-management-database" target="_blank" rel="noopener">
+            View Repository
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </a>
+        </div>
+      </div>
+      <div class="work-img work-img-clientkit">
+        <img src="assets/database-preview.png" alt="Project Management Database preview" />
+      </div>
+    </div>
+
+    <div class="work-item reveal">
+      <div class="work-info">
+        <h3 class="work-name">Arduino Embedded Systems</h3>
+        <p class="work-desc">
+          A set of embedded systems projects demonstrating sensor input, state machine logic, timed control flow, and real-time hardware interaction using Arduino.
+        </p>
+        <div class="work-tags">
+          <span class="wtag">Arduino</span>
+          <span class="wtag">Embedded</span>
+          <span class="wtag">State Machines</span>
+          <span class="wtag">C++</span>
+        </div>
+        <div class="work-actions">
+          <a class="work-link" href="https://github.com/hasnain-amir/arduino-embedded-systems" target="_blank" rel="noopener">
+            View Repository
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </a>
+        </div>
+      </div>
+      <div class="work-img work-img-candence">
+        <img src="assets/arduino-preview.png" alt="Arduino Embedded Systems preview" />
+      </div>
+    </div>
+
+    <div class="work-item reveal">
       <div class="work-info">
         <h3 class="work-name">Noori</h3>
-        <p class="work-desc">A learning platform designed end-to-end, from brand to production-ready mobile experience.</p>
+        <p class="work-desc">
+          A learning platform built around structured digital product thinking, combining interface design, product direction, content systems, and production-ready implementation.
+        </p>
         <div class="work-tags">
-          <span class="wtag">Mobile App</span>
-          <span class="wtag">Branding</span>
-          <span class="wtag">UI/UX</span>
           <span class="wtag">Product</span>
+          <span class="wtag">UI/UX</span>
+          <span class="wtag">Brand</span>
+          <span class="wtag">Mobile</span>
         </div>
-        <span class="work-link">
-          Visit site
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m9 18 6-6-6-6" />
-          </svg>
-        </span>
+        <div class="work-actions">
+          <a class="work-link" href="https://noori.app" target="_blank" rel="noopener">
+            Visit Site
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+          </a>
+        </div>
       </div>
       <div class="work-img work-img-noori">
         <img src="assets/noori_preview.png" alt="Noori preview" />
       </div>
-    </a>
-
-    <a class="work-item work-card-link reveal" href="https://hasnain-amir.github.io/Personal-CV-Site" target="_blank" rel="noopener">
-      <div class="work-info">
-        <h3 class="work-name">Personal CV Site</h3>
-        <p class="work-desc">A three-page static CV website built from scratch. HTML, CSS, and vanilla JS with full form validation.</p>
-        <div class="work-tags">
-          <span class="wtag">Website</span>
-          <span class="wtag">HTML / CSS</span>
-          <span class="wtag">JavaScript</span>
-        </div>
-        <span class="work-link">
-          Visit site
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m9 18 6-6-6-6" />
-          </svg>
-        </span>
-      </div>
-      <div class="work-img work-img-cv">
-        <img src="assets/cv_preview.png" alt="Personal CV Site preview" />
-      </div>
-    </a>
-
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="about-inner">
-    <p class="about-label reveal-left">About</p>
-    <div class="about-body reveal-right">
-      <p>I'm Hasnain, a design-led developer splitting time between Birmingham and London. I build clear, well-structured digital products, spanning brand identity, interface design, and production-ready software.</p>
-      <p>My work sits between design and development. I shape visual systems and interfaces, then carry those decisions through into build, ensuring ideas translate cleanly from concept to code without losing clarity or intent.</p>
-      <p>I work independently and take a deliberate approach to each project, with thoughtful decision-making, consistency, and detail. Work that feels considered, cohesive, and built to endure.</p>
-      <!-- <a href="cv.pdf" download class="cv-btn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download CV
-      </a> -->
     </div>
   </div>
 </section>
 
-<!-- STACK -->
+<section id="about">
+  <div class="about-inner">
+    <p class="about-label reveal-left">About</p>
+    <div class="about-body reveal-right">
+      <p>
+        I'm Hasnain, a Computer Science student and full-stack developer based between Birmingham and London. I build structured digital products across frontend, backend, databases, and embedded systems.
+      </p>
+      <p>
+        My work focuses on building clear, usable systems, from full-stack web applications with authentication and data modelling, to lower-level embedded projects using real-time logic and hardware interaction.
+      </p>
+      <p>
+        I care about clarity in both design and implementation, whether that means shaping a user interface, structuring a backend, or modelling data in a way that is maintainable, scalable, and easy to reason about.
+      </p>
+
+      <div class="about-points">
+        <div class="about-point">
+          <strong>Backend</strong>
+          Node.js, Express, authentication, security middleware, and database integration.
+        </div>
+        <div class="about-point">
+          <strong>Databases</strong>
+          MySQL schema design, normalisation, relational modelling, and SQL queries.
+        </div>
+        <div class="about-point">
+          <strong>Frontend</strong>
+          Responsive interfaces with HTML, CSS, JavaScript, and React-based tooling.
+        </div>
+        <div class="about-point">
+          <strong>Embedded</strong>
+          Arduino systems using sensors, displays, timed logic, and state machines.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="stack">
   <div class="stack-top reveal">
     <p class="stack-label">Stack</p>
@@ -873,63 +1032,63 @@ body.loaded { opacity: 1; }
     <div class="marquee-wrap">
       <div class="marquee">
         <div class="marquee-group">
-        <span class="spill" style="--icon-color:61DAFB;"><img src="https://cdn.simpleicons.org/react/61DAFB" alt="" />React</span>
-        <span class="spill" style="--icon-color:3178C6;"><img src="https://cdn.simpleicons.org/typescript/3178C6" alt="" />TypeScript</span>
-        <span class="spill" style="--icon-color:F7DF1E;"><img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="" />JavaScript</span>
-        <span class="spill" style="--icon-color:E34F26;"><img src="https://cdn.simpleicons.org/html5/E34F26" alt="" />HTML5</span>
-        <span class="spill" style="--icon-color:#1572B6;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>CSS3</title><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg>CSS3</span>
-        <span class="spill" style="--icon-color:339933;"><img src="https://cdn.simpleicons.org/nodedotjs/339933" alt="" />Node.js</span>
-        <span class="spill" style="--icon-color:F24E1E;"><img src="https://cdn.simpleicons.org/figma/F24E1E" alt="" />Figma</span>
-        <span class="spill" style="--icon-color:#31A8FF;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Adobe Photoshop</title><path d="M9.85 8.42c-.37-.15-.77-.21-1.18-.2-.26 0-.49 0-.68.01-.2-.01-.34 0-.41.01v3.36c.14.01.27.02.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03.01-.31-.07-.62-.23-.89-.17-.26-.41-.46-.7-.57zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.899c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.391 11.65c-.399.56-.959.98-1.609 1.22-.68.25-1.43.34-2.25.34-.24 0-.4 0-.5-.01s-.24-.01-.43-.01v3.209c.01.07-.04.131-.11.141H5.52c-.08 0-.12-.041-.12-.131V6.42c0-.07.03-.11.1-.11.17 0 .33 0 .56-.01.24-.01.49-.01.76-.02s.56-.01.87-.02c.31-.01.61-.01.91-.01.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.149.42.229.85.229 1.3.001.86-.199 1.57-.6 2.13zm7.091 3.89c-.28.4-.671.709-1.12.891-.49.209-1.09.318-1.811.318-.459 0-.91-.039-1.359-.129-.35-.061-.7-.17-1.02-.32-.07-.039-.121-.109-.111-.189v-1.74c0-.029.011-.07.041-.09.029-.02.06-.01.09.01.39.23.8.391 1.24.49.379.1.779.15 1.18.15.38 0 .65-.051.83-.141.16-.07.27-.24.27-.42 0-.141-.08-.27-.24-.4-.16-.129-.489-.279-.979-.471-.51-.18-.979-.42-1.42-.719-.31-.221-.569-.51-.761-.85-.159-.32-.239-.67-.229-1.021 0-.43.12-.84.341-1.21.25-.4.619-.72 1.049-.92.469-.239 1.059-.349 1.769-.349.41 0 .83.03 1.24.09.3.04.59.12.86.23.039.01.08.05.1.09.01.04.02.08.02.12v1.63c0 .04-.02.08-.05.1-.09.02-.14.02-.18 0-.3-.16-.62-.27-.96-.34-.37-.08-.74-.13-1.12-.13-.2-.01-.41.02-.601.07-.129.03-.24.1-.31.2-.05.08-.08.18-.08.27s.04.18.101.26c.09.11.209.2.34.27.229.12.47.23.709.33.541.18 1.061.43 1.541.73.33.209.6.49.789.83.16.318.24.67.23 1.029.011.471-.129.94-.389 1.331z"/></svg>Photoshop</span>
-        <span class="spill" style="--icon-color:#FF9A00;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Adobe Illustrator</title><path d="M10.53 10.73c-.1-.31-.19-.61-.29-.92-.1-.31-.19-.6-.27-.89-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.14.51-.29.98-.44 1.4h2.54c-.06-.211-.14-.46-.23-.721-.09-.269-.18-.559-.27-.859zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zM14.7 16.83h-2.091c-.069.01-.139-.04-.159-.11l-.82-2.38H7.91l-.76 2.35c-.02.09-.1.15-.19.141H5.08c-.11 0-.14-.061-.11-.18L8.19 7.38c.03-.1.06-.21.1-.33.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.08 0 .12.03.13.08l3.65 10.3c.03.109 0 .16-.1.16zm3.4-.15c0 .11-.039.16-.129.16H16.01c-.1 0-.15-.061-.15-.16v-7.7c0-.1.041-.14.131-.14h1.98c.09 0 .129.05.129.14v7.7zm-.209-9.03c-.231.24-.571.37-.911.35-.33.01-.65-.12-.891-.35-.23-.25-.35-.58-.34-.92-.01-.34.12-.66.359-.89.242-.23.562-.35.892-.35.391 0 .689.12.91.35.22.24.34.56.33.89.01.34-.11.67-.349.92z"/></svg>Illustrator</span>
-        <span class="spill" style="--icon-color:#9999FF;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Adobe After Effects</title><path d="M8.54 10.73c-.1-.31-.19-.61-.29-.92s-.19-.6-.27-.89c-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.13.51-.29.98-.44 1.4h2.54c-.06-.21-.14-.46-.23-.72-.09-.27-.18-.56-.27-.86zm8.58-.29c-.55-.03-1.07.26-1.33.76-.12.23-.19.47-.22.72h2.109c.26 0 .45 0 .57-.01.08-.01.16-.03.23-.08v-.1c0-.13-.021-.25-.061-.37-.178-.56-.708-.94-1.298-.92zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.04 16.511h-2.09c-.07.01-.14-.041-.16-.11l-.82-2.4H5.92l-.76 2.36c-.02.09-.1.15-.19.14H3.09c-.11 0-.14-.06-.11-.18L6.2 7.39c.03-.1.06-.19.1-.31.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.07 0 .12.03.13.08l3.65 10.25c.03.11.001.161-.1.161zm7.851-3.991c-.021.189-.031.33-.041.42-.01.07-.069.13-.14.13-.06 0-.17.01-.33.021-.159.02-.35.029-.579.029-.23 0-.471-.04-.73-.04h-3.17c.039.31.14.62.31.89.181.271.431.48.729.601.4.17.841.26 1.281.25.35-.011.699-.04 1.039-.11.311-.039.61-.119.891-.23.05-.039.08-.02.08.08v1.531c0 .039-.01.08-.021.119-.021.03-.04.051-.069.07-.32.14-.65.24-1 .3-.471.09-.94.13-1.42.12-.761 0-1.4-.12-1.92-.35-.49-.211-.921-.541-1.261-.95-.319-.39-.55-.83-.69-1.31-.14-.471-.209-.961-.209-1.461 0-.539.08-1.07.25-1.59.16-.5.41-.96.75-1.37.33-.4.739-.72 1.209-.95.471-.23 1.03-.31 1.67-.31.531-.01 1.06.09 1.55.31.41.18.77.45 1.05.8.26.34.47.72.601 1.14.129.4.189.81.189 1.22 0 .24-.01.45-.019.64z"/></svg>After Effects</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/react/61DAFB" alt="" />React</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/typescript/3178C6" alt="" />TypeScript</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="" />JavaScript</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/html5/E34F26" alt="" />HTML5</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/css/1572B6" alt="" />CSS3</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/nodedotjs/339933" alt="" />Node.js</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/express/ffffff" alt="" />Express</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/mysql/4479A1" alt="" />MySQL</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/git/F05032" alt="" />Git</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/github/ffffff" alt="" />GitHub</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/arduino/00979D" alt="" />Arduino</span>
         </div>
         <div class="marquee-group" aria-hidden="true">
-        <span class="spill" style="--icon-color:61DAFB;"><img src="https://cdn.simpleicons.org/react/61DAFB" alt="" />React</span>
-        <span class="spill" style="--icon-color:3178C6;"><img src="https://cdn.simpleicons.org/typescript/3178C6" alt="" />TypeScript</span>
-        <span class="spill" style="--icon-color:F7DF1E;"><img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="" />JavaScript</span>
-        <span class="spill" style="--icon-color:E34F26;"><img src="https://cdn.simpleicons.org/html5/E34F26" alt="" />HTML5</span>
-        <span class="spill" style="--icon-color:#1572B6;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>CSS3</title><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z"/></svg>CSS3</span>
-        <span class="spill" style="--icon-color:339933;"><img src="https://cdn.simpleicons.org/nodedotjs/339933" alt="" />Node.js</span>
-        <span class="spill" style="--icon-color:F24E1E;"><img src="https://cdn.simpleicons.org/figma/F24E1E" alt="" />Figma</span>
-        <span class="spill" style="--icon-color:#31A8FF;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Adobe Photoshop</title><path d="M9.85 8.42c-.37-.15-.77-.21-1.18-.2-.26 0-.49 0-.68.01-.2-.01-.34 0-.41.01v3.36c.14.01.27.02.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03.01-.31-.07-.62-.23-.89-.17-.26-.41-.46-.7-.57zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.899c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.391 11.65c-.399.56-.959.98-1.609 1.22-.68.25-1.43.34-2.25.34-.24 0-.4 0-.5-.01s-.24-.01-.43-.01v3.209c.01.07-.04.131-.11.141H5.52c-.08 0-.12-.041-.12-.131V6.42c0-.07.03-.11.1-.11.17 0 .33 0 .56-.01.24-.01.49-.01.76-.02s.56-.01.87-.02c.31-.01.61-.01.91-.01.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.149.42.229.85.229 1.3.001.86-.199 1.57-.6 2.13zm7.091 3.89c-.28.4-.671.709-1.12.891-.49.209-1.09.318-1.811.318-.459 0-.91-.039-1.359-.129-.35-.061-.7-.17-1.02-.32-.07-.039-.121-.109-.111-.189v-1.74c0-.029.011-.07.041-.09.029-.02.06-.01.09.01.39.23.8.391 1.24.49.379.1.779.15 1.18.15.38 0 .65-.051.83-.141.16-.07.27-.24.27-.42 0-.141-.08-.27-.24-.4-.16-.129-.489-.279-.979-.471-.51-.18-.979-.42-1.42-.719-.31-.221-.569-.51-.761-.85-.159-.32-.239-.67-.229-1.021 0-.43.12-.84.341-1.21.25-.4.619-.72 1.049-.92.469-.239 1.059-.349 1.769-.349.41 0 .83.03 1.24.09.3.04.59.12.86.23.039.01.08.05.1.09.01.04.02.08.02.12v1.63c0 .04-.02.08-.05.1-.09.02-.14.02-.18 0-.3-.16-.62-.27-.96-.34-.37-.08-.74-.13-1.12-.13-.2-.01-.41.02-.601.07-.129.03-.24.1-.31.2-.05.08-.08.18-.08.27s.04.18.101.26c.09.11.209.2.34.27.229.12.47.23.709.33.541.18 1.061.43 1.541.73.33.209.6.49.789.83.16.318.24.67.23 1.029.011.471-.129.94-.389 1.331z"/></svg>Photoshop</span>
-        <span class="spill" style="--icon-color:#FF9A00;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Adobe Illustrator</title><path d="M10.53 10.73c-.1-.31-.19-.61-.29-.92-.1-.31-.19-.6-.27-.89-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.14.51-.29.98-.44 1.4h2.54c-.06-.211-.14-.46-.23-.721-.09-.269-.18-.559-.27-.859zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zM14.7 16.83h-2.091c-.069.01-.139-.04-.159-.11l-.82-2.38H7.91l-.76 2.35c-.02.09-.1.15-.19.141H5.08c-.11 0-.14-.061-.11-.18L8.19 7.38c.03-.1.06-.21.1-.33.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.08 0 .12.03.13.08l3.65 10.3c.03.109 0 .16-.1.16zm3.4-.15c0 .11-.039.16-.129.16H16.01c-.1 0-.15-.061-.15-.16v-7.7c0-.1.041-.14.131-.14h1.98c.09 0 .129.05.129.14v7.7zm-.209-9.03c-.231.24-.571.37-.911.35-.33.01-.65-.12-.891-.35-.23-.25-.35-.58-.34-.92-.01-.34.12-.66.359-.89.242-.23.562-.35.892-.35.391 0 .689.12.91.35.22.24.34.56.33.89.01.34-.11.67-.349.92z"/></svg>Illustrator</span>
-        <span class="spill" style="--icon-color:#9999FF;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Adobe After Effects</title><path d="M8.54 10.73c-.1-.31-.19-.61-.29-.92s-.19-.6-.27-.89c-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.13.51-.29.98-.44 1.4h2.54c-.06-.21-.14-.46-.23-.72-.09-.27-.18-.56-.27-.86zm8.58-.29c-.55-.03-1.07.26-1.33.76-.12.23-.19.47-.22.72h2.109c.26 0 .45 0 .57-.01.08-.01.16-.03.23-.08v-.1c0-.13-.021-.25-.061-.37-.178-.56-.708-.94-1.298-.92zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.04 16.511h-2.09c-.07.01-.14-.041-.16-.11l-.82-2.4H5.92l-.76 2.36c-.02.09-.1.15-.19.14H3.09c-.11 0-.14-.06-.11-.18L6.2 7.39c.03-.1.06-.19.1-.31.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.07 0 .12.03.13.08l3.65 10.25c.03.11.001.161-.1.161zm7.851-3.991c-.021.189-.031.33-.041.42-.01.07-.069.13-.14.13-.06 0-.17.01-.33.021-.159.02-.35.029-.579.029-.23 0-.471-.04-.73-.04h-3.17c.039.31.14.62.31.89.181.271.431.48.729.601.4.17.841.26 1.281.25.35-.011.699-.04 1.039-.11.311-.039.61-.119.891-.23.05-.039.08-.02.08.08v1.531c0 .039-.01.08-.021.119-.021.03-.04.051-.069.07-.32.14-.65.24-1 .3-.471.09-.94.13-1.42.12-.761 0-1.4-.12-1.92-.35-.49-.211-.921-.541-1.261-.95-.319-.39-.55-.83-.69-1.31-.14-.471-.209-.961-.209-1.461 0-.539.08-1.07.25-1.59.16-.5.41-.96.75-1.37.33-.4.739-.72 1.209-.95.471-.23 1.03-.31 1.67-.31.531-.01 1.06.09 1.55.31.41.18.77.45 1.05.8.26.34.47.72.601 1.14.129.4.189.81.189 1.22 0 .24-.01.45-.019.64z"/></svg>After Effects</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/react/61DAFB" alt="" />React</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/typescript/3178C6" alt="" />TypeScript</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="" />JavaScript</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/html5/E34F26" alt="" />HTML5</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/css/1572B6" alt="" />CSS3</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/nodedotjs/339933" alt="" />Node.js</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/express/ffffff" alt="" />Express</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/mysql/4479A1" alt="" />MySQL</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/git/F05032" alt="" />Git</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/github/ffffff" alt="" />GitHub</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/arduino/00979D" alt="" />Arduino</span>
         </div>
       </div>
     </div>
+
     <div class="marquee-wrap">
       <div class="marquee">
         <div class="marquee-group">
-        <span class="spill" style="--icon-color:#FF61F6;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Adobe XD</title><path d="M4.25.3C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3Zm14.07 5.13h2.03c.05-.01.09.03.1.07v9.54c0 .18.01.38.02.6.02.21.03.41.04.58 0 .07-.03.13-.1.16-.52.22-1.07.38-1.63.48-.51.09-1.02.14-1.54.14-.74.01-1.48-.14-2.15-.45-.63-.29-1.15-.77-1.51-1.36-.37-.61-.55-1.37-.55-2.28a4.107 4.107 0 0 1 2.14-3.66c.7-.39 1.54-.58 2.53-.58.05 0 .12 0 .21.01s.19.01.31.02V5.54c0-.07.03-.11.1-.11zM3.68 6.3h2.27c.05 0 .1.01.14.02.04.02.07.05.1.09.19.43.41.86.64 1.29.24.43.47.85.72 1.27.24.42.46.84.67 1.27h.02c.21-.44.43-.87.65-1.29.22-.42.45-.84.68-1.26.23-.42.45-.85.67-1.26.01-.04.03-.08.06-.1a.19.19 0 0 1 .13-.02h2.11c.05-.01.1.02.11.07.01.01-.01.05-.03.07l-3 4.95 3.2 5.25c.02.04.03.08.02.12-.01.04-.05.01-.11.02h-2.29c-.16 0-.27-.01-.34-.11-.21-.42-.43-.83-.64-1.25-.21-.41-.44-.83-.68-1.26-.24-.43-.48-.86-.72-1.3h-.02c-.21.43-.44.86-.67 1.29-.23.43-.46.86-.68 1.28-.23.42-.46.85-.69 1.26-.04.1-.12.11-.23.11h-2.2c-.04 0-.07.02-.07-.03a.14.14 0 0 1 .02-.11l3.11-5.1L3.6 6.44c-.03-.04-.04-.08-.02-.1.02-.03.06-.04.1-.04zm13.94 4.23c-.39 0-.78.08-1.13.26-.34.17-.63.42-.85.74-.22.32-.33.75-.33 1.27-.01.35.05.7.17 1.03.1.27.25.51.45.71.19.18.42.32.68.4.27.09.55.13.83.13.15 0 .29-.01.42-.02.13.01.24-.01.36-.05v-4.4c-.09-.02-.18-.04-.27-.05-.11-.01-.22-.02-.33-.02Z"/></svg>Adobe XD</span>
-        <span class="spill" style="--icon-color:4169E1;"><img src="https://cdn.simpleicons.org/postgresql/4169E1" alt="" />Postgres</span>
-        <span class="spill" style="--icon-color:4479A1;"><img src="https://cdn.simpleicons.org/mysql/4479A1" alt="" />MySQL</span>
-        <span class="spill" style="--icon-color:F05138;"><img src="https://cdn.simpleicons.org/swift/F05138" alt="" />Swift</span>
-        <span class="spill" style="--icon-color:5865F2;"><img src="https://cdn.simpleicons.org/discord/5865F2" alt="" />Discord</span>
-        <span class="spill" style="--icon-color:F05032;"><img src="https://cdn.simpleicons.org/git/F05032" alt="" />Git</span>
-        <span class="spill" style="--icon-color:181717;"><img src="https://cdn.simpleicons.org/github/181717" alt="" />GitHub</span>
-        <span class="spill" style="--icon-color:#007ACC;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Visual Studio Code</title><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>VS Code</span>
-        <span class="spill" style="--icon-color:146EF5;"><img src="https://cdn.simpleicons.org/webflow/146EF5" alt="" />Webflow</span>
-        <span class="spill" style="--icon-color:0055FF;"><img src="https://cdn.simpleicons.org/framer/0055FF" alt="" />Framer</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/postgresql/4169E1" alt="" />Postgres</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/figma/F24E1E" alt="" />Figma</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/framer/0055FF" alt="" />Framer</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/webflow/146EF5" alt="" />Webflow</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/adobexd/FF61F6" alt="" />Adobe XD</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/adobephotoshop/31A8FF" alt="" />Photoshop</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/adobeillustrator/FF9A00" alt="" />Illustrator</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/adobeaftereffects/9999FF" alt="" />After Effects</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/visualstudiocode/007ACC" alt="" />VS Code</span>
         </div>
         <div class="marquee-group" aria-hidden="true">
-        <span class="spill" style="--icon-color:#FF61F6;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Adobe XD</title><path d="M4.25.3C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3Zm14.07 5.13h2.03c.05-.01.09.03.1.07v9.54c0 .18.01.38.02.6.02.21.03.41.04.58 0 .07-.03.13-.1.16-.52.22-1.07.38-1.63.48-.51.09-1.02.14-1.54.14-.74.01-1.48-.14-2.15-.45-.63-.29-1.15-.77-1.51-1.36-.37-.61-.55-1.37-.55-2.28a4.107 4.107 0 0 1 2.14-3.66c.7-.39 1.54-.58 2.53-.58.05 0 .12 0 .21.01s.19.01.31.02V5.54c0-.07.03-.11.1-.11zM3.68 6.3h2.27c.05 0 .1.01.14.02.04.02.07.05.1.09.19.43.41.86.64 1.29.24.43.47.85.72 1.27.24.42.46.84.67 1.27h.02c.21-.44.43-.87.65-1.29.22-.42.45-.84.68-1.26.23-.42.45-.85.67-1.26.01-.04.03-.08.06-.1a.19.19 0 0 1 .13-.02h2.11c.05-.01.1.02.11.07.01.01-.01.05-.03.07l-3 4.95 3.2 5.25c.02.04.03.08.02.12-.01.04-.05.01-.11.02h-2.29c-.16 0-.27-.01-.34-.11-.21-.42-.43-.83-.64-1.25-.21-.41-.44-.83-.68-1.26-.24-.43-.48-.86-.72-1.3h-.02c-.21.43-.44.86-.67 1.29-.23.43-.46.86-.68 1.28-.23.42-.46.85-.69 1.26-.04.1-.12.11-.23.11h-2.2c-.04 0-.07.02-.07-.03a.14.14 0 0 1 .02-.11l3.11-5.1L3.6 6.44c-.03-.04-.04-.08-.02-.1.02-.03.06-.04.1-.04zm13.94 4.23c-.39 0-.78.08-1.13.26-.34.17-.63.42-.85.74-.22.32-.33.75-.33 1.27-.01.35.05.7.17 1.03.1.27.25.51.45.71.19.18.42.32.68.4.27.09.55.13.83.13.15 0 .29-.01.42-.02.13.01.24-.01.36-.05v-4.4c-.09-.02-.18-.04-.27-.05-.11-.01-.22-.02-.33-.02Z"/></svg>Adobe XD</span>
-        <span class="spill" style="--icon-color:4169E1;"><img src="https://cdn.simpleicons.org/postgresql/4169E1" alt="" />Postgres</span>
-        <span class="spill" style="--icon-color:4479A1;"><img src="https://cdn.simpleicons.org/mysql/4479A1" alt="" />MySQL</span>
-        <span class="spill" style="--icon-color:F05138;"><img src="https://cdn.simpleicons.org/swift/F05138" alt="" />Swift</span>
-        <span class="spill" style="--icon-color:5865F2;"><img src="https://cdn.simpleicons.org/discord/5865F2" alt="" />Discord</span>
-        <span class="spill" style="--icon-color:F05032;"><img src="https://cdn.simpleicons.org/git/F05032" alt="" />Git</span>
-        <span class="spill" style="--icon-color:181717;"><img src="https://cdn.simpleicons.org/github/181717" alt="" />GitHub</span>
-        <span class="spill" style="--icon-color:#007ACC;"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Visual Studio Code</title><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>VS Code</span>
-        <span class="spill" style="--icon-color:146EF5;"><img src="https://cdn.simpleicons.org/webflow/146EF5" alt="" />Webflow</span>
-        <span class="spill" style="--icon-color:0055FF;"><img src="https://cdn.simpleicons.org/framer/0055FF" alt="" />Framer</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/postgresql/4169E1" alt="" />Postgres</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/figma/F24E1E" alt="" />Figma</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/framer/0055FF" alt="" />Framer</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/webflow/146EF5" alt="" />Webflow</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/adobexd/FF61F6" alt="" />Adobe XD</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/adobephotoshop/31A8FF" alt="" />Photoshop</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/adobeillustrator/FF9A00" alt="" />Illustrator</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/adobeaftereffects/9999FF" alt="" />After Effects</span>
+          <span class="spill"><img src="https://cdn.simpleicons.org/visualstudiocode/007ACC" alt="" />VS Code</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WRITING -->
 <section id="writing">
   <div class="writing-inner">
     <h2 class="writing-label reveal">Writing</h2>
@@ -949,6 +1108,7 @@ body.loaded { opacity: 1; }
           <span>4 min read</span>
         </div>
       </a>
+
       <a href="https://www.noori.app/blog/next-the-quran" class="writing-item" target="_blank" rel="noopener">
         <div class="writing-img">
           <img src="assets/blog/quran-cover.png" alt="Next, The Qur'an cover" />
@@ -964,6 +1124,7 @@ body.loaded { opacity: 1; }
           <span>5 min read</span>
         </div>
       </a>
+
       <a href="https://www.noori.app/blog/knowledge-fades-noori-doesnt-ignore-that" class="writing-item" target="_blank" rel="noopener">
         <div class="writing-img">
           <img src="assets/blog/progression-cover.png" alt="Knowledge Fades. Noori Doesn't Ignore That cover" />
@@ -983,9 +1144,11 @@ body.loaded { opacity: 1; }
   </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact">
   <h2 class="contact-heading reveal">Let's build something.</h2>
+  <p class="contact-sub reveal">
+    Open to opportunities, collaborations, and product work across web, backend, and embedded systems.
+  </p>
   <div class="social-row">
     <div class="email-wrap">
       <button class="social-btn email" aria-label="Copy email" type="button" onclick="copyEmailOnly(event)">
@@ -996,12 +1159,11 @@ body.loaded { opacity: 1; }
       </button>
       <span class="email-copied" aria-live="polite">Copied</span>
     </div>
-    <a href="https://x.com/hasnainamirr" class="social-btn x" aria-label="X" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-    </a>
+
     <a href="https://www.linkedin.com/in/hasnain-amir/" class="social-btn li" aria-label="LinkedIn" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
     </a>
+
     <a href="https://github.com/hasnain-amir" class="social-btn gh" aria-label="GitHub" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
     </a>
@@ -1026,31 +1188,36 @@ body.loaded { opacity: 1; }
 </nav>
 
 <script>
-// Page load
 window.addEventListener('load', () => document.body.classList.add('loaded'));
 
-// Custom cursor
 const cursor = document.getElementById('cursor');
 let mouseX = 0, mouseY = 0, curX = 0, curY = 0;
+
 document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 document.addEventListener('mouseleave', () => cursor.classList.add('hidden'));
 document.addEventListener('mouseenter', () => cursor.classList.remove('hidden'));
+
 document.querySelectorAll('a, button, .social-btn, .bnav-link, .bnav-email, .work-item, .writing-item, .spill').forEach(el => {
   el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
   el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
 });
+
 (function animateCursor() {
   curX += (mouseX - curX) * 0.12;
   curY += (mouseY - curY) * 0.12;
   cursor.style.left = curX + 'px';
-  cursor.style.top  = curY + 'px';
+  cursor.style.top = curY + 'px';
   requestAnimationFrame(animateCursor);
 })();
 
-// Scroll reveals
 const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .stagger');
 const revealObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObs.unobserve(e.target);
+    }
+  });
 }, { threshold: 0.12 });
 revealEls.forEach(el => revealObs.observe(el));
 
@@ -1096,10 +1263,11 @@ function copyEmailOnly(event) {
   }
 }
 
-const words = ['apps', 'websites', 'systems', 'bots', 'products'];
+const words = ['apps', 'systems', 'platforms', 'tools', 'products'];
 let wi = 0;
 const cycleEl = document.getElementById('cycle');
 cycleEl.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+
 setInterval(() => {
   cycleEl.style.opacity = '0';
   cycleEl.style.transform = 'translateY(6px)';
@@ -1115,13 +1283,11 @@ function updateClock() {
   const now = new Date();
   const d = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   const t = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  const str = d + '  ' + t;
-  document.getElementById('clock').textContent = str;
-  const footerClock = document.getElementById('footer-clock');
-  if (footerClock) footerClock.textContent = str;
+  document.getElementById('clock').textContent = d + '  ' + t;
 }
 updateClock();
 setInterval(updateClock, 1000);
 </script>
+
 </body>
 </html>
